@@ -10,6 +10,10 @@ class Car extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'year' => 'integer'
+    ];
+
     /**
      * @return BelongsTo
      */
