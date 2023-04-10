@@ -14,6 +14,13 @@ class Car extends Model
         'year' => 'integer'
     ];
 
+    protected $fillable = [
+        'make',
+        'model',
+        'year',
+    ];
+
+
     /**
      * @return BelongsTo
      */

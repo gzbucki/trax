@@ -18,4 +18,14 @@ class UserCarService
         return $user->cars()->get();
     }
 
+    /**
+     * @param User $user
+     * @param array $data
+     * @return Car
+     */
+    public function create(User $user, array $data): Car
+    {
+        return $user->cars()->create($data);
+    }
+
 }

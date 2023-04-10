@@ -19,7 +19,7 @@ class CarFactory extends Factory
         return [
             'make' => $this->faker->word,
             'model' => $this->faker->words(2, true),
-            'year' => $this->faker->year,
+            'year' => (int) $this->faker->year,
         ];
     }
 }

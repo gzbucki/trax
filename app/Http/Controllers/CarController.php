@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CarStoreRequest;
 use App\Http\Resources\CarResource;
 use App\Services\UserCarService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\Response;
 
 class CarController extends Controller
 {
@@ -30,12 +32,15 @@ class CarController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CarStoreRequest $request
+     * @return Response
      */
-    public function store(Request $request)
+    public function store(CarStoreRequest $request): Response
     {
-        //
+        $car = $this->service->create($request->user(), $request->validated());
+
+        return (new CarResource($car))->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
