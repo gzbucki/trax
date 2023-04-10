@@ -29,13 +29,21 @@ class UserCarService
     }
 
     /**
-     * @param User $user
      * @param int $id
      * @return Car|null
      */
-    public function find(User $user, int $id): ?Car
+    public function find(int $id): ?Car
     {
-        return $user->cars()->find($id);
+        return Car::query()->find($id);
+    }
+
+    /**
+     * @param Car $car
+     * @return bool|null
+     */
+    public function delete(Car $car): ?bool
+    {
+        return $car->delete();
     }
 
 }

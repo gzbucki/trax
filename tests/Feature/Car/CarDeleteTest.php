@@ -8,15 +8,15 @@ use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\AbstractFeatureTest;
 
-class CarShowTest extends AbstractFeatureTest
+class CarDeleteTest extends AbstractFeatureTest
 {
     use RefreshDatabase;
 
-    public const ROUTE_NAME = 'cars.show';
+    public const ROUTE_NAME = 'cars.destroy';
 
     public function testUnauthenticated()
     {
-        $this->getJson($this->route(parameters: [1]))
+        $this->deleteJson($this->route(parameters: [1]))
             ->assertUnauthorized();
     }
 
@@ -28,25 +28,32 @@ class CarShowTest extends AbstractFeatureTest
         $user2 = User::factory()->create();
 
         $this->authenticate($user2)
-            ->getJson($this->route(parameters: [$car->id]))
+            ->deleteJson($this->route(parameters: [$car->id]))
             ->assertForbidden();
+
+        $this->assertDatabaseCount(Car::class, 1);
     }
 
-    public function testSuccess()
+    public function testSuccessful()
     {
         $user = User::factory()->create();
         $car = Car::factory()->for($user)->create();
+        $carData = $car->only(CarResource::VISIBLE_FIELDS);
+
+        $this->assertDatabaseCount(Car::class, 1);
 
         $this->authenticate($user)
-            ->getJson($this->route(parameters: [$car->id]))
-            ->assertSuccessful()
-            ->assertJsonStructure(['data' => CarResource::VISIBLE_FIELDS]);
+            ->deleteJson($this->route(parameters: [$car->id]))
+            ->assertNoContent();
+
+        $this->assertDatabaseMissing(Car::class, $carData);
+        $this->assertDatabaseCount(Car::class, 0);
     }
 
     public function testCarNotFound()
     {
         $this->authenticate()
-            ->getJson($this->route(parameters: [1]))
+            ->deleteJson($this->route(parameters: [1]))
             ->assertNotFound();
     }
 

@@ -6,6 +6,7 @@ use App\Http\Requests\CarStoreRequest;
 use App\Http\Resources\CarResource;
 use App\Services\UserCarService;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -44,25 +45,34 @@ class CarController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param int $id
      * @return CarResource
+     * @throws AuthorizationException
      */
-    public function show(Request $request, int $id): CarResource
+    public function show(int $id): CarResource
     {
-        $car = $this->service->find($request->user(), $id);
+        $car = $this->service->find($id);
 
         abort_if($car === null, Response::HTTP_NOT_FOUND);
+        $this->authorize('view', $car);
 
         return new CarResource($car);
     }
 
     /**
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
+     * @throws AuthorizationException
      */
-    public function destroy($id)
+    public function destroy(int $id): Response
     {
-        //
+        $car = $this->service->find($id);
+
+        abort_if($car === null, Response::HTTP_NOT_FOUND);
+        $this->authorize('delete', $car);
+
+        $this->service->delete($car);
+
+        return \response()->noContent();
     }
 }

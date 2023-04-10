@@ -15,7 +15,7 @@ class CarStoreTest extends AbstractFeatureTest
 
     public function testUnauthenticated()
     {
-        $this->getJson($this->route())
+        $this->postJson($this->route())
             ->assertUnauthorized();
     }
 
