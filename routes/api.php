@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CarController;
+use App\Http\Controllers\CarTripController;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -26,6 +28,13 @@ Route::get('/user', function (Request $request) {
 /// - /resource/assets/traxAPI.js will have to be updated to align with
 ///   the API implementation
 //////////////////////////////////////////////////////////////////////////
+
+Route::middleware('auth:api')->group(
+    function () {
+        Route::apiResource('cars', CarController::class)->except(['update']);
+        Route::apiResource('trips', CarTripController::class)->only(['index', 'store']);
+    }
+);
 
 // Mock endpoint to get all cars for the logged in user
 
