@@ -15,11 +15,14 @@ abstract class AbstractFeatureTest extends TestCase
 
     /**
      * @param string|null $route
+     * @param array $parameters
      * @return string
      * @throws Throwable
      */
-    protected function route(?string $route = null): string
-    {
+    protected function route(
+        ?string $route = null,
+        array $parameters = []
+    ): string {
         if ($route === null) {
             $route = static::ROUTE_NAME;
         }
@@ -29,10 +32,11 @@ abstract class AbstractFeatureTest extends TestCase
             new Exception('ROUTE_NAME missing in ' . static::class)
         );
 
-        return route(static::ROUTE_NAME);
+        return route(static::ROUTE_NAME, $parameters);
     }
 
     /**
+     * @param User|null $user
      * @return AbstractFeatureTest
      */
     protected function authenticate(?User $user = null): AbstractFeatureTest

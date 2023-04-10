@@ -28,4 +28,14 @@ class UserCarService
         return $user->cars()->create($data);
     }
 
+    /**
+     * @param User $user
+     * @param int $id
+     * @return Car|null
+     */
+    public function find(User $user, int $id): ?Car
+    {
+        return $user->cars()->find($id);
+    }
+
 }
