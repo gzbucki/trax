@@ -11,6 +11,8 @@ npm-debug.log
 yarn-error.log
 public/js/app.js
 public/mix-manifest.json
+.env
+phpunit.xml
 
 #docker
 /docker/logs
