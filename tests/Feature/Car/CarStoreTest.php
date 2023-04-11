@@ -1,0 +1,51 @@
+<?php
+
+namespace Car;
+
+use App\Car;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Feature\AbstractFeatureTest;
+
+class CarStoreTest extends AbstractFeatureTest
+{
+    use RefreshDatabase;
+
+    public const ROUTE_NAME = 'cars.store';
+
+    public function testUnauthenticated()
+    {
+        $this->postJson($this->route())
+            ->assertUnauthorized();
+    }
+
+    public function testSuccessful()
+    {
+        $carData = Car::factory()->raw();
+
+        $this->assertDatabaseCount(Car::class, 0);
+
+        $this->authenticate()
+            ->postJson($this->route(), $carData)
+            ->assertCreated()
+            ->assertJsonStructure(['data' => Car::PUBLIC_FIELDS])
+            ->assertJsonFragment($carData);
+
+        $this->assertDatabaseHas(Car::class, $carData);
+        $this->assertDatabaseCount(Car::class, 1);
+    }
+
+    public function testValidationErrors()
+    {
+        $carData = ['make' => null, 'model' => null, 'year' => null];
+
+        $this->authenticate()
+            ->postJson($this->route(), $carData)
+            ->assertUnprocessable()
+            ->assertJsonStructure(
+                ['message', 'errors' => ['make', 'model', 'year']]
+            );
+
+        $this->assertDatabaseCount(Car::class, 0);
+    }
+
+}

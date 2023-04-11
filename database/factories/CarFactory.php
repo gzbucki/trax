@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Car>
  */
-class UserFactory extends Factory
+class CarFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,10 +17,9 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
-            'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
-            'remember_token' => str_random(10),
+            'make' => $this->faker->word,
+            'model' => $this->faker->words(2, true),
+            'year' => (int) $this->faker->year,
         ];
     }
 }
