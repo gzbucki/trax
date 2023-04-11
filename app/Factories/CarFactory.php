@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Factories;
+namespace App\Factories;
 
 use App\Car as CarModel;
 use App\DTO\Car;

@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Car;
 use App\DTO\Car as CarDTO;
-use App\Http\Factories\CarFactory;
+use App\Factories\CarFactory;
 use App\User;
 use Illuminate\Support\LazyCollection;
 
