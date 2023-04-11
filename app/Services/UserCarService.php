@@ -58,10 +58,10 @@ class UserCarService
     }
 
     /**
-     * @param Car $car
-     * @return CarDTO
+     * @param Car|null $car
+     * @return CarDTO|null
      */
-    public function modelToDTO(Car $car): CarDTO
+    public function modelToDTO(?Car $car): ?CarDTO
     {
         return $this->carFactory->createFromModel($car);
     }
