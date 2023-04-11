@@ -27,8 +27,12 @@ class CarController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
+        $cars = $this->service->getCars(
+            $request->user('api')
+        );
+
         return CarResource::collection(
-            $this->service->getCars($request->user('api'))
+            $this->service->mapLazyModelsToDTO($cars)
         );
     }
 
@@ -40,8 +44,11 @@ class CarController extends Controller
     {
         $car = $this->service->create($request->user(), $request->validated());
 
-        return (new CarResource($car))->response()
-            ->setStatusCode(Response::HTTP_CREATED);
+        $resource = new CarResource(
+            $this->service->modelToDTO($car)
+        );
+
+        return $resource->response()->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
@@ -56,7 +63,9 @@ class CarController extends Controller
         abort_if($car === null, Response::HTTP_NOT_FOUND);
         $this->authorize('view', $car);
 
-        return new CarResource($car);
+        return new CarResource(
+            $this->service->modelToDTO($car)
+        );
     }
 
     /**

@@ -7,13 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class CarResource extends JsonResource
 {
 
-    const VISIBLE_FIELDS = [
-        'id',
-        'make',
-        'model',
-        'year',
-    ];
-
     /**
      * Transform the resource into an array.
      *
@@ -22,6 +15,11 @@ class CarResource extends JsonResource
      */
     public function toArray($request)
     {
-        return $this->resource->only(self::VISIBLE_FIELDS);
+        return [
+            'id' => $this->resource->id,
+            'make' => $this->resource->make,
+            'model' => $this->resource->model,
+            'year' => $this->resource->year,
+        ];
     }
 }

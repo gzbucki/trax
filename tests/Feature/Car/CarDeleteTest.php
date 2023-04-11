@@ -38,7 +38,7 @@ class CarDeleteTest extends AbstractFeatureTest
     {
         $user = User::factory()->create();
         $car = Car::factory()->for($user)->create();
-        $carData = $car->only(CarResource::VISIBLE_FIELDS);
+        $carData = $car->only(Car::PUBLIC_FIELDS);
 
         $this->assertDatabaseCount(Car::class, 1);
 

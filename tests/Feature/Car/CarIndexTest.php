@@ -3,7 +3,6 @@
 namespace Tests\Feature\Car;
 
 use App\Car;
-use App\Http\Resources\CarResource;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\AbstractFeatureTest;
@@ -33,7 +32,7 @@ class CarIndexTest extends AbstractFeatureTest
             ->assertSuccessful()
             ->assertJsonCount(1, 'data')
             ->assertExactJson(
-                ['data' => [$car->only(CarResource::VISIBLE_FIELDS)]]
+                ['data' => [$car->only(Car::PUBLIC_FIELDS)]]
             );
 
         $this->assertDatabaseCount(Car::class, 2);
@@ -50,7 +49,7 @@ class CarIndexTest extends AbstractFeatureTest
         $this->authenticate($user2)
             ->getJson($this->route())
             ->assertSuccessful()
-            ->assertJsonStructure(['data' => [CarResource::VISIBLE_FIELDS]])
+            ->assertJsonStructure(['data' => [Car::PUBLIC_FIELDS]])
             ->assertJsonCount(5, 'data');
 
         $this->assertDatabaseCount(Car::class, 6);

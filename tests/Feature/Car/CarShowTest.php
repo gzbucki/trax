@@ -40,7 +40,7 @@ class CarShowTest extends AbstractFeatureTest
         $this->authenticate($user)
             ->getJson($this->route(parameters: [$car->id]))
             ->assertSuccessful()
-            ->assertJsonStructure(['data' => CarResource::VISIBLE_FIELDS]);
+            ->assertJsonStructure(['data' => Car::PUBLIC_FIELDS]);
     }
 
     public function testCarNotFound()

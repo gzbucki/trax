@@ -3,19 +3,30 @@
 namespace App\Services;
 
 use App\Car;
+use App\DTO\Car as CarDTO;
+use App\Http\Factories\CarFactory;
 use App\User;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\LazyCollection;
 
 class UserCarService
 {
 
     /**
-     * @param User $user
-     * @return Collection
+     * @param CarFactory $carFactory
      */
-    public function getCars(User $user): Collection
+    public function __construct(private CarFactory $carFactory)
     {
-        return $user->cars()->get();
+        //
+    }
+
+    /**
+     * @param User $user
+     * @return LazyCollection
+     */
+    public function getCars(User $user): LazyCollection
+    {
+        return $user->cars()
+            ->cursor();
     }
 
     /**
@@ -44,6 +55,23 @@ class UserCarService
     public function delete(Car $car): ?bool
     {
         return $car->delete();
+    }
+
+    /**
+     * @param Car $car
+     * @return CarDTO
+     */
+    public function modelToDTO(Car $car): CarDTO
+    {
+        return $this->carFactory->createFromModel($car);
+    }
+
+    /**
+     * @param LazyCollection $collection
+     * @return LazyCollection
+     */
+    public function mapLazyModelsToDTO(LazyCollection $collection): LazyCollection {
+        return $collection->map(fn ($car) => $this->modelToDTO($car));
     }
 
 }

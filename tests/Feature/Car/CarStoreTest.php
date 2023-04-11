@@ -28,7 +28,7 @@ class CarStoreTest extends AbstractFeatureTest
         $this->authenticate()
             ->postJson($this->route(), $carData)
             ->assertCreated()
-            ->assertJsonStructure(['data' => CarResource::VISIBLE_FIELDS])
+            ->assertJsonStructure(['data' => Car::PUBLIC_FIELDS])
             ->assertJsonFragment($carData);
 
         $this->assertDatabaseHas(Car::class, $carData);
