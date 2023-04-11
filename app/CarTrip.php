@@ -22,6 +22,11 @@ class CarTrip extends Model
         'date' => 'date:m/d/Y',
     ];
 
+    protected $fillable = [
+        'date',
+        'miles',
+    ];
+
     protected $table = self::TABLE_NAME;
 
     /**

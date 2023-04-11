@@ -11,6 +11,7 @@ class CarTrip
      * @param int $id
      * @param Carbon $date
      * @param float $miles
+     * @param Car $car
      * @param float $total
      */
     public function __construct(

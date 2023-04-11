@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CarTripStoreRequest;
 use App\Http\Resources\CarTripResource;
+use App\Services\UserCarService;
 use App\Services\UserCarTripService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\Response;
 
 class CarTripController extends Controller
 {
 
     /**
-     * @param UserCarTripService $service
+     * @param UserCarService $carService
+     * @param UserCarTripService $carTripService
      */
-    public function __construct(private UserCarTripService $service)
-    {
+    public function __construct(
+        private UserCarService $carService,
+        private UserCarTripService $carTripService
+    ) {
         //
     }
 
@@ -24,21 +31,38 @@ class CarTripController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $trips = $this->service->getTrips($request->user());
+        $trips = $this->carTripService->getTrips($request->user());
 
         return CarTripResource::collection(
-            $this->service->mapLazyStdClassToDTO($trips)
+            $this->carTripService->mapLazyStdClassToDTO($trips)
         );
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CarTripStoreRequest $request
+     * @return Response
+     * @throws AuthorizationException
      */
-    public function store(Request $request)
+    public function store(CarTripStoreRequest $request): Response
     {
-        //
+        $car = $this->carService->find($request->validated('car_id'));
+
+        abort_if($car === null, Response::HTTP_NOT_FOUND);
+        $this->authorize('create_trip', $car);
+
+        $trip = $this->carTripService->create(
+            $request->user(),
+            $car,
+            [
+                'date' => $request->validated('date'),
+                'miles' => $request->validated('miles'),
+            ]
+        );
+
+        $resource = new CarTripResource(
+            $this->carTripService->modelToDTO($trip)
+        );
+
+        return $resource->response()->setStatusCode(Response::HTTP_CREATED);
     }
 }

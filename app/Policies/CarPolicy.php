@@ -29,4 +29,14 @@ class CarPolicy
     {
         return $car->user_id === $user->id;
     }
+
+    /**
+     * @param User $user
+     * @param Car $car
+     * @return bool
+     */
+    public function create_trip(User $user, Car $car): bool
+    {
+        return $car->user_id === $user->id;
+    }
 }

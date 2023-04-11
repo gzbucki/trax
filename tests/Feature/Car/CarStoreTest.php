@@ -3,7 +3,6 @@
 namespace Car;
 
 use App\Car;
-use App\Http\Resources\CarResource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\AbstractFeatureTest;
 

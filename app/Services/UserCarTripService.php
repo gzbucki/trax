@@ -28,6 +28,22 @@ class UserCarTripService
 
     /**
      * @param User $user
+     * @param Car $car
+     * @param array $data
+     * @return CarTrip
+     */
+    public function create(User $user, Car $car, array $data): CarTrip
+    {
+        $trip = new CarTrip();
+        $trip->date = Carbon::parse($data['date'])->format('Y-m-d');
+        $trip->miles = $data['miles'];
+        $trip->user()->associate($user);
+
+        return $car->trips()->save($trip);
+    }
+
+    /**
+     * @param User $user
      * @return LazyCollection
      */
     public function getTrips(User $user): LazyCollection
@@ -75,6 +91,15 @@ class UserCarTripService
     public function mapLazyStdClassToDTO(LazyCollection $collection): LazyCollection
     {
         return $collection->map(fn ($record) => $this->stdClassToDTO($record));
+    }
+
+    /**
+     * @param CarTrip $model
+     * @return CarTripDTO|null
+     */
+    public function modelToDTO(CarTrip $model): ?CarTripDTO
+    {
+        return $this->carTripFactory->createFromModel($model);
     }
 
     /**
